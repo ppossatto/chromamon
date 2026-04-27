@@ -1,0 +1,48 @@
+# Backend
+api.local-chromamon.com {
+    tls internal
+
+    reverse_proxy chromamon-back:8081
+}
+
+# Frontend
+www.local-chromamon.com {
+    tls internal
+
+    reverse_proxy chromamon-front:4200
+}
+
+# Keycloak
+auth.local-chromamon.com {
+    tls internal
+
+    reverse_proxy keycloak:8080
+}
+
+# RustFS
+storage.local-chromamon.com {
+    tls internal
+
+    reverse_proxy rustfs:9000
+}
+
+# RustFS UI
+storage-ui.local-chromamon.com {
+    tls internal
+
+    reverse_proxy rustfs:9001
+}
+
+# PgAdmin
+db.local-chromamon.com {
+    tls internal
+
+    reverse_proxy pgadmin:80
+}
+
+# Mailpit
+mail.local-chromamon.com {
+    tls internal
+
+    reverse_proxy mailpit:8025
+}

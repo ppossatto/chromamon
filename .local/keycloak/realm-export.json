@@ -1,0 +1,197 @@
+{
+  "realm": "chromamon-realm",
+  "enabled": true,
+  "displayName": "Chromamon",
+  "sslRequired": "none",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": true,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": true,
+
+  "ssoSessionIdleTimeout": 1800,
+  "ssoSessionMaxLifespan": 28800,
+  "accessTokenLifespan": 300,
+
+  "roles": {
+    "realm": [
+      { "name": "EMPLOYEE",   "description": "Employee — Read-only access for transformers." },
+      { "name": "ENGINEER",   "description": "Engineer — Manages transformers and review analyses." },
+      { "name": "BACKOFFICE", "description": "Back Office — Total access with UPDATE/DELETE authorizations, 2FA required." },
+      { "name": "COLLECTOR",  "description": "Collector — Adds and checks analyses." },
+      { "name": "AUDITOR",    "description": "Auditor — GET access for all resources and histories." }
+    ]
+  },
+
+  "groups": [
+    {
+      "name": "TECHNICAL",
+      "realmRoles": ["ENGINEER", "COLLECTOR"]
+    },
+    {
+      "name": "MANAGEMENT",
+      "realmRoles": ["BACKOFFICE", "AUDITOR"]
+    }
+  ],
+
+  "clients": [
+    {
+      "clientId": "chroma-app-back",
+      "name": "Chromamon Backend Service",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": false,
+      "standardFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": true,
+      "authorizationServicesEnabled": false,
+      "alwaysDisplayInConsole": false,
+      "attributes": {
+        "pkce.code.challenge.method": ""
+      },
+      "protocolMappers": [
+        {
+          "name": "realm-roles-mapper",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-realm-role-mapper",
+          "consentRequired": false,
+          "config": {
+            "claim.name": "realm_access.roles",
+            "jsonType.label": "String",
+            "multivalued": "true",
+            "userinfo.token.claim": "true",
+            "id.token.claim": "true",
+            "access.token.claim": "true"
+          }
+        }
+      ]
+    },
+    {
+      "clientId": "chroma-app-front",
+      "name": "Chromamon Frontend Service",
+      "enabled": true,
+      "protocol": "openid-connect",
+      "publicClient": true,
+      "standardFlowEnabled": true,
+      "directAccessGrantsEnabled": false,
+      "authorizationServicesEnabled": false,
+      "alwaysDisplayInConsole": false,
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      },
+      "rootUrl": "http://localhost:4200",
+      "baseUrl": "http://localhost:4200",
+      "redirectUris": ["http://localhost:4200/*"],
+      "webOrigins": ["*"]
+    }
+  ],
+
+  "clientScopes": [
+    {
+      "name": "roles",
+      "protocol": "openid-connect",
+      "attributes": {
+        "include.in.token.scope": "true"
+      }
+    }
+  ],
+
+  "defaultDefaultClientScopes": [
+    "openid",
+    "email",
+    "profile",
+    "roles"
+  ],
+
+  "users": [
+    {
+      "username": "test-employee",
+      "enabled": true,
+      "email": "test-employee@chromamon.local",
+      "firstName": "Test",
+      "lastName": "Employee",
+      "credentials": [{ "type": "password", "value": "test123", "temporary": false }],
+      "realmRoles": ["EMPLOYEE"]
+    },
+    {
+      "username": "test-engineer",
+      "enabled": true,
+      "email": "test-engineer@chromamon.local",
+      "firstName": "Test",
+      "lastName": "Engineer",
+      "credentials": [{ "type": "password", "value": "test123", "temporary": false }],
+      "realmRoles": ["ENGINEER"]
+    },
+    {
+      "username": "test-backoffice",
+      "enabled": true,
+      "email": "test-backoffice@chromamon.local",
+      "firstName": "Test",
+      "lastName": "Backoffice",
+      "credentials": [{ "type": "password", "value": "test123", "temporary": false }],
+      "realmRoles": ["BACKOFFICE"]
+    },
+    {
+      "username": "test-collector",
+      "enabled": true,
+      "email": "test-collector@chromamon.local",
+      "firstName": "Test",
+      "lastName": "Collector",
+      "credentials": [{ "type": "password", "value": "test123", "temporary": false }],
+      "realmRoles": ["COLLECTOR"]
+    },
+    {
+      "username": "test-auditor",
+      "enabled": true,
+      "email": "test-auditor@chromamon.local",
+      "firstName": "Test",
+      "lastName": "Auditor",
+      "credentials": [{ "type": "password", "value": "test123", "temporary": false }],
+      "realmRoles": ["AUDITOR"]
+    }
+  ],
+
+  "authenticationFlows": [
+    {
+      "alias": "backoffice-2fa-flow",
+      "description": "Authentication flow with required 2FA for the BACKOFFICE role.",
+      "providerId": "basic-flow",
+      "topLevel": true,
+      "builtIn": false,
+      "authenticationExecutions": [
+        {
+          "authenticator": "auth-username-password-form",
+          "requirement": "REQUIRED",
+          "priority": 10
+        },
+        {
+          "authenticator": "auth-otp-form",
+          "requirement": "REQUIRED",
+          "priority": 20
+        }
+      ]
+    }
+  ],
+
+  "browserSecurityHeaders": {
+    "contentSecurityPolicy": "frame-src 'self'; frame-ancestors 'self'; object-src 'none';"
+  },
+
+  "eventsEnabled": true,
+  "eventsExpiration": 604800,
+  "eventsListeners": ["jboss-logging"],
+  "enabledEventTypes": [
+    "LOGIN",
+    "LOGIN_ERROR",
+    "LOGOUT",
+    "LOGOUT_ERROR",
+    "REGISTER",
+    "REGISTER_ERROR",
+    "UPDATE_PASSWORD",
+    "UPDATE_PASSWORD_ERROR"
+  ],
+
+  "adminEventsEnabled": true,
+  "adminEventsDetailsEnabled": true
+}

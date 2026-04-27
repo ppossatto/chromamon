@@ -1,0 +1,121 @@
+services:
+  keycloak:
+    image: keycloak/keycloak:26.6
+    container_name: chromamon-keycloak
+    command: start-dev --import-realm
+    env_file:
+      - .env
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/chromamon?currentSchema=keycloak
+      KC_DB_USERNAME: ${KEYCLOAK_DB_USER:-keycloakuser}
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-keycloakpassword}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USER:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-admin}
+      KC_HOSTNAME: auth.local-chromamon.com
+      KC_HOSTNAME_STRICT: false
+      KC_HTTP_ENABLED: true
+      KC_PROXY_HEADERS: xforwarded
+    volumes:
+      - ./keycloak/realm-export.json:/opt/keycloak/data/import/realm-export.json
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - chromamon-network
+    restart: unless-stopped
+
+  rustfs:
+    image: rustfs/rustfs:latest-glibc
+    container_name: chromamon-rustfs
+    env_file:
+      - .env
+    environment:
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY}
+    volumes:
+      - chromamon-rustfs-data:/data
+    networks:
+      - chromamon-network
+    restart: unless-stopped
+
+  postgres:
+    image: postgis/postgis:17-3.5
+    container_name: chromamon-postgres
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: chromamon
+    volumes:
+      - chromamon-postgres-data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - chromamon-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d chromamon"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+  pgadmin:
+    image: dpage/pgadmin4:9.14.0
+    container_name: chromamon-pgadmin
+    env_file:
+      - .env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+      PGADMIN_CONFIG_READ_ONLY: "True"
+    volumes:
+      - chromamon-pgadmin-data:/var/lib/pgadmin
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - chromamon-network
+    restart: unless-stopped
+
+  mailpit:
+    image: axllent/mailpit:v1.29
+    container_name: chromamon-mailpit
+    volumes:
+      - chromamon-mailpit-data:/data
+    networks:
+      - chromamon-network
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2.11.2
+    container_name: chromamon-caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - chromamon-caddy-data:/data
+      - chromamon-caddy-config:/config
+    depends_on:
+      - keycloak
+      - rustfs
+      - postgres
+      - pgadmin
+      - mailpit
+    networks:
+      - chromamon-network
+    restart: unless-stopped
+
+networks:
+  chromamon-network:
+    driver: bridge
+
+volumes:
+  chromamon-postgres-data:
+  chromamon-rustfs-data:
+  chromamon-caddy-data:
+  chromamon-caddy-config:
+  chromamon-keycloak-data:
+  chromamon-pgadmin-data:
+  chromamon-mailpit-data:
