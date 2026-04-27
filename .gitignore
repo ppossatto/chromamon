@@ -1,4 +1,4 @@
-HELP.md
+backend/chromaback/HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
@@ -31,4 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
-.local/.env
+**/.env
+
+### Project ###
+/docs

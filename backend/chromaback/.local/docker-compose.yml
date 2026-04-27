@@ -28,8 +28,6 @@ services:
   rustfs:
     image: rustfs/rustfs:latest-glibc
     container_name: chromamon-rustfs
-    env_file:
-      - .env
     environment:
       RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY}
       RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY}
@@ -37,7 +35,37 @@ services:
       - chromamon-rustfs-data:/data
     networks:
       - chromamon-network
+    healthcheck:
+      test: [ "CMD-SHELL", "bash -c 'echo > /dev/tcp/localhost/9000' || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     restart: unless-stopped
+
+  rustfs-init:
+    image: python:3.13-slim
+    container_name: chromamon-rustfs-init
+    profiles:
+      - init
+    environment:
+      RUSTFS_ENDPOINT: http://rustfs:9000
+      RUSTFS_ACCESS_KEY: ${RUSTFS_ACCESS_KEY}
+      RUSTFS_SECRET_KEY: ${RUSTFS_SECRET_KEY}
+    volumes:
+      - ./rustfs/init.py:/app/init.py
+      - ./rustfs/requirements.txt:/app/requirements.txt
+    working_dir: /app
+    entrypoint: >
+      /bin/sh -c "
+      pip install --quiet -r requirements.txt &&
+      python init.py
+      "
+    depends_on:
+      rustfs:
+        condition: service_healthy
+    networks:
+      - chromamon-network
+    restart: no
 
   postgres:
     image: postgis/postgis:17-3.5
