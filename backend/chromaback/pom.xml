@@ -51,6 +51,8 @@
 		<mapstruct-processor.version>1.6.3</mapstruct-processor.version>
 		<lombok-mapstruct-bind.version>0.2.0</lombok-mapstruct-bind.version>
 		<opencsv.version>5.12.0</opencsv.version>
+		<hibernate-spatial.version>7.3.3.Final</hibernate-spatial.version>
+		<spring-boot-starter-hateoas.version>4.0.6</spring-boot-starter-hateoas.version>
 		<!-- Plugins -->
 		<jacoco-plugin.version>0.8.14</jacoco-plugin.version>
 		<spotless-plugin.version>3.4.0</spotless-plugin.version>
@@ -95,6 +97,16 @@
 		<dependency>
 			<groupId>org.springframework.batch</groupId>
 			<artifactId>spring-batch-core</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-spatial</artifactId>
+			<version>${hibernate-spatial.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-hateoas</artifactId>
+			<version>${spring-boot-starter-hateoas.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.flywaydb</groupId>
