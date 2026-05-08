@@ -1,5 +1,6 @@
 package com.ppossatto.chromaback.transformers.internal.adapter.in.rest.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.util.UUID;
 @Builder
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class TransformerByExternalIdResponse extends RepresentationModel<TransformerByExternalIdResponse> {
   private UUID externalIdentifier;
   private String serialNumber;

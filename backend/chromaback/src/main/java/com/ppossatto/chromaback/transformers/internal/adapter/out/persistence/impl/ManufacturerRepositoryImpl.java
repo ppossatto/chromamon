@@ -1,7 +1,7 @@
 package com.ppossatto.chromaback.transformers.internal.adapter.out.persistence.impl;
 
-import com.ppossatto.chromaback.transformers.internal.adapter.exception.AdapterErrorMessage;
-import com.ppossatto.chromaback.transformers.internal.adapter.exception.AdapterException;
+import com.ppossatto.chromaback.transformers.internal.adapter.exception.TransformerAdapterErrorMessage;
+import com.ppossatto.chromaback.transformers.internal.adapter.exception.TransformerAdapterException;
 import com.ppossatto.chromaback.transformers.internal.adapter.out.persistence.ManufacturerJpaRepository;
 import com.ppossatto.chromaback.transformers.internal.application.dto.ManufacturerDto;
 import com.ppossatto.chromaback.transformers.internal.application.mapper.ManufacturerMapper;
@@ -24,8 +24,8 @@ public class ManufacturerRepositoryImpl implements ManufacturerRepository {
        .findByExternalIdentifier(externalId)
        .map(manufacturerMapper::toDto)
        .orElseThrow(
-          () -> new AdapterException(
-             AdapterErrorMessage.MANUFACTURER_BY_EXTERNAL_ID_NOT_FOUND, externalId.toString()
+          () -> new TransformerAdapterException(
+             TransformerAdapterErrorMessage.MANUFACTURER_BY_EXTERNAL_ID_NOT_FOUND, externalId.toString()
           )
        );
   }

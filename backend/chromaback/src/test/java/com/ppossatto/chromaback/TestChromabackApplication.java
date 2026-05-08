@@ -6,7 +6,7 @@ public class TestChromabackApplication {
 
   public static void main(String[] args) {
     SpringApplication.from(Application::main)
-        .with(TestcontainersConfiguration.class)
+        .with(ChromamonTestContainers.class)
         .run(args);
   }
 }

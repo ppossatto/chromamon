@@ -14,7 +14,7 @@ public record ManufacturerDto(
    String website,
    Boolean isActive,
    String contactEmail,
-   Set<TransformerDto> transformers,
+   Set<Long> transformers,
    LocalDateTime createdAt,
    LocalDateTime updatedAt,
    LocalDateTime deletedAt,

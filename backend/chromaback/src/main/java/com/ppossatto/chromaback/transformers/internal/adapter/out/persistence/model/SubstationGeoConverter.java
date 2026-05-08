@@ -26,8 +26,13 @@ public class SubstationGeoConverter {
           .map(p -> new Coordinate(p.longitude(), p.latitude()))
           .toList().toArray(new Coordinate[0]);
 
-    Coordinate[] closedAreaCoordinates = Arrays.copyOf(areaCoordinates, areaCoordinates.length + 1);
-    closedAreaCoordinates[closedAreaCoordinates.length - 1] = areaCoordinates[0];
+    Coordinate[] closedAreaCoordinates;
+    if(!areaCoordinates[0].equals(areaCoordinates[areaCoordinates.length - 1])) {
+      closedAreaCoordinates = Arrays.copyOf(areaCoordinates, areaCoordinates.length + 1);
+      closedAreaCoordinates[closedAreaCoordinates.length - 1] = areaCoordinates[0];
+    } else {
+      closedAreaCoordinates = areaCoordinates;
+    }
 
     LinearRing linearRing = FACTORY.createLinearRing(closedAreaCoordinates);
 

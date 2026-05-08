@@ -8,17 +8,18 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "manufacturer", schema = "transformers")
 @Getter
 @NoArgsConstructor
-@Builder
+@Setter
 public class ManufacturerJpaEntity extends TableMetadata {
 
   @Column(name = "name", length = 100, nullable = false)
@@ -39,4 +40,16 @@ public class ManufacturerJpaEntity extends TableMetadata {
 
   @OneToMany(mappedBy = "manufacturer")
   private Set<TransformerJpaEntity> transformers;
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    ManufacturerJpaEntity that = (ManufacturerJpaEntity) o;
+    return Objects.equals(name, that.name) && country == that.country;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name, country);
+  }
 }

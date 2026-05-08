@@ -19,4 +19,7 @@ public interface TransformerJpaRepository extends JpaRepository<TransformerJpaEn
   List<String> findBySerialNumbers(@Param("serialNumbers") List<String> serialNumbers);
 
   Optional<TransformerJpaEntity> findBySerialNumber(String serialNumber);
+
+  @Query("SELECT t FROM TransformerJpaEntity t WHERE t.id IN :ids")
+  List<TransformerJpaEntity> findAllById(List<Long> ids);
 }

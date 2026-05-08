@@ -45,7 +45,7 @@
 		<jspecify.version>1.0.0</jspecify.version>
 		<jasperreports.version>7.0.6</jasperreports.version>
 		<archunit.version>1.4.2</archunit.version>
-		<pact-junit5.version>4.7.0</pact-junit5.version>
+		<pact-junit5.version>4.7.1</pact-junit5.version>
 		<cucumber.version>7.17.0</cucumber.version>
 		<junit-platform-suite.version>1.10.1</junit-platform-suite.version>
 		<mapstruct-processor.version>1.6.3</mapstruct-processor.version>
@@ -262,6 +262,12 @@
 		</dependency>
 		<dependency>
 			<groupId>au.com.dius.pact.provider</groupId>
+			<artifactId>junit5spring</artifactId>
+			<version>${pact-junit5.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>au.com.dius.pact.consumer</groupId>
 			<artifactId>junit5</artifactId>
 			<version>${pact-junit5.version}</version>
 			<scope>test</scope>

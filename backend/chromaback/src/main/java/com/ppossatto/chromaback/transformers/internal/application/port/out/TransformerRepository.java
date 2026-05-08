@@ -4,6 +4,7 @@ import com.ppossatto.chromaback.transformers.TransformerConditionEvent;
 import com.ppossatto.chromaback.transformers.internal.application.dto.TransformerDto;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 public interface TransformerRepository {
@@ -13,4 +14,6 @@ public interface TransformerRepository {
   List<String> getExistingTransformersBySerialNumber(List<String> serialNumbers);
 
   void updateTransformerCondition(TransformerConditionEvent event);
+
+  Set<TransformerDto> getTransformersByIds(Set<Long> id);
 }

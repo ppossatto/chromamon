@@ -1,7 +1,7 @@
 package com.ppossatto.chromaback.transformers.internal.adapter.in.rest;
 
 import com.ppossatto.chromaback.config.WebConfig;
-import com.ppossatto.chromaback.transformers.internal.adapter.in.rest.dto.response.ManufacturerByExternalIdResponseDto;
+import com.ppossatto.chromaback.transformers.internal.adapter.in.rest.dto.response.ManufacturerByExternalIdResponse;
 import com.ppossatto.chromaback.transformers.internal.adapter.in.rest.mapper.ManufacturerApiMapper;
 import com.ppossatto.chromaback.transformers.internal.application.service.ManufacturerService;
 import lombok.RequiredArgsConstructor;
@@ -29,11 +29,11 @@ public class ManufacturerController {
 
   @PreAuthorize("hasAnyRole('BACKOFFICE', 'ENGINEER')")
   @GetMapping(value = "/{externalIdentifier}", version = WebConfig.Constants.VERSION_ONE)
-  public ResponseEntity<ManufacturerByExternalIdResponseDto> getManufacturerByExternalIdentifier(
+  public ResponseEntity<ManufacturerByExternalIdResponse> getManufacturerByExternalIdentifier(
      @PathVariable UUID externalIdentifier
   ) {
     log.info("Request for retrieving manufacturer by external identifier: '{}'", externalIdentifier);
-    ManufacturerByExternalIdResponseDto response =
+    ManufacturerByExternalIdResponse response =
        manufacturerApiMapper.toGetManufacturerByExternalIdentifierResponse(
           manufacturerService.getManufacturerByExternalIdentifier(externalIdentifier)
        );

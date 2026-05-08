@@ -18,7 +18,7 @@ public record SubstationDto(
    Coordinates location,
    PolygonCoordinates coverageArea,
    PolygonCoordinates affectedArea,
-   Set<TransformerDto> transformers,
+   Set<Long> transformers,
    LocalDateTime createdAt,
    LocalDateTime updatedAt,
    LocalDateTime deletedAt,

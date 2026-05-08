@@ -9,6 +9,7 @@ import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import java.util.UUID;
 @MappedSuperclass
 @NoArgsConstructor
 @Getter
+@Setter
 public abstract class TableMetadata {
 
   @Id

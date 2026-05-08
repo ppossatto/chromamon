@@ -5,19 +5,20 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.locationtech.jts.geom.Point;
 import org.locationtech.jts.geom.Polygon;
 
+import java.util.Objects;
 import java.util.Set;
 
 @Entity
 @Table(name = "substation", schema = "transformers")
 @Getter
 @NoArgsConstructor
-@Builder
+@Setter
 public class SubstationJpaEntity extends TableMetadata {
 
   @Column(name = "name", nullable = false, unique = true)
@@ -43,4 +44,16 @@ public class SubstationJpaEntity extends TableMetadata {
 
   @OneToMany(mappedBy = "substation")
   private Set<TransformerJpaEntity> transformers;
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == null || getClass() != o.getClass()) return false;
+    SubstationJpaEntity that = (SubstationJpaEntity) o;
+    return Objects.equals(name, that.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(name);
+  }
 }

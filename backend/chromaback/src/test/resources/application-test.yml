@@ -1,0 +1,9 @@
+spring:
+  threads:
+    virtual:
+      enabled: true
+
+logging:
+  level:
+    root: INFO
+    com.ppossatto.chromaback: DEBUG
